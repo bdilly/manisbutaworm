@@ -39,17 +39,21 @@ class GameModel(pyglet.event.EventDispatcher):
                             box2d.b2DebugDraw.e_centerOfMassBit),]
 
         # Create hero
+        body = self.create_character(10, 20)
+        body.SetMassFromShapes()
+        if self.settings.debugLevel:
+            print body
+
+    def create_character(self, x, y):
         sd = box2d.b2PolygonDef()
         sd.SetAsBox(10.0, 10.0)
         sd.density = 1.0
 
         bd = box2d.b2BodyDef() 
-        bd.position = (20.0, 20.0)
+        bd.position = (x, y)
         body = self.world.CreateBody(bd)
         body.CreateShape(sd)
-        body.SetMassFromShapes()
-        if self.settings.debugLevel:
-            print body
+        return body
 
     def set_controller( self, ctrl ):
         self.ctrl = weakref.ref( ctrl )
