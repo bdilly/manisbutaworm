@@ -87,7 +87,7 @@ class GameCtrl(Layer):
             self.add(sprite)
             sprite.position = (b.position.x * self.model.zoom), \
                 (b.position.y * self.model.zoom)
-            degrees = (b.GetAngle() * 180) / math.pi
+            degrees = -(b.GetAngle() * 180) / math.pi
             sprite.rotation = degrees
 
         # center the image
