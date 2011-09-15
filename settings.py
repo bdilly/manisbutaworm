@@ -4,9 +4,9 @@
 #
 # C++ version Copyright (c) 2006-2007 Erin Catto http://www.gphysics.com
 # Python version Copyright (c) 2008 kne / sirkne at gmail dot com
-# 
+#
 # Implemented using the pybox2d SWIG interface for Box2D (pybox2d.googlecode.com)
-# 
+#
 # This software is provided 'as-is', without any express or implied
 # warranty.  In no event will the authors be held liable for any damages
 # arising from the use of this software.
@@ -70,7 +70,7 @@ for opt_name in list_options:
             parser.add_option('','--'+opt_name, dest=opt_name, default=value,
                               action='store_'+str(not value).lower(),
                               help=opt_name)
-            
+
     else:
         if isinstance(value, int):
             opttype = 'int'
