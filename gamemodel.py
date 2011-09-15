@@ -41,6 +41,7 @@ class GameModel(pyglet.event.EventDispatcher):
         # Create hero
         sd = box2d.b2PolygonDef()
         sd.SetAsBox(10.0, 10.0)
+        sd.density = 1.0
 
         bd = box2d.b2BodyDef() 
         bd.position = (20.0, 20.0)
