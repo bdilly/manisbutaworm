@@ -48,6 +48,8 @@ class GameModel(pyglet.event.EventDispatcher):
         body = self.world.CreateBody(bd)
         body.CreateShape(sd)
         body.SetMassFromShapes()
+        if self.settings.debugLevel:
+            print body
 
     def set_controller( self, ctrl ):
         self.ctrl = weakref.ref( ctrl )

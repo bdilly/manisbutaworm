@@ -49,6 +49,9 @@ class fwSettings(object):
     drawCOMs=False            # Centers of mass
     pointSize=2.5             # pixel radius for drawing points
 
+    # Debugging? Choose the debug level
+    debugLevel=0
+
     # Miscellaneous testbed options
     pause=False
     singleStep=False
