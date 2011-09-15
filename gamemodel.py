@@ -4,6 +4,23 @@ import weakref
 import Box2D as box2d
 from settings import fwSettings
 
+class BodyProperties(object):
+    isCharacter = False
+    isBlock = True
+    _sprite = None
+
+    def __init__(self, isBlock=True, isCharacter=False):
+        super(BodyProperties,self).__init__()
+        if isCharacter:
+            self.isBlock = False
+            self.isCharacter = True
+
+    def get_sprite(self):
+        return self._sprite
+
+    def set_sprite(self, sprite):
+        self._sprite = sprite
+
 class GameModel(pyglet.event.EventDispatcher):
     def __init__(self):
         super(GameModel,self).__init__()
@@ -44,15 +61,32 @@ class GameModel(pyglet.event.EventDispatcher):
         if self.settings.debugLevel:
             print body
 
+        # Create ground
+        body = self.create_ground(0, 10, 20, 5)
+
+
     def create_character(self, x, y):
+        props = BodyProperties(isCharacter=True)
         sd = box2d.b2PolygonDef()
         sd.SetAsBox(10.0, 10.0)
         sd.density = 1.0
 
-        bd = box2d.b2BodyDef() 
+        bd = box2d.b2BodyDef()
         bd.position = (x, y)
         body = self.world.CreateBody(bd)
         body.CreateShape(sd)
+        body.SetUserData(props)
+        return body
+
+    def create_ground(self, x, y, w, h):
+        props = BodyProperties()
+        sd = box2d.b2PolygonDef()
+        sd.SetAsBox(w, h)
+        bd = box2d.b2BodyDef()
+        bd.position = (x, y)
+        body = self.world.CreateBody(bd)
+        body.CreateShape(sd)
+        body.SetUserData(props)
         return body
 
     def set_controller( self, ctrl ):

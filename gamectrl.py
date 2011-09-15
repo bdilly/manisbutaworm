@@ -3,11 +3,43 @@ from pyglet.gl import *
 import Box2D as box2d
 import math
 
+from cocos import draw
 from cocos.director import director
 from cocos.layer import Layer
 from cocos.sprite import Sprite
+from cocos.rect import Rect
 
 from constants import WIDTH, HEIGHT
+
+
+class RectBlock(draw.Canvas):
+    p1 = (-1.0, -1.0)
+    p2 = (1.0, -1.0)
+    p3 = (1.0, 1.0)
+    p4 = (-1.0, 1.0)
+
+    def __init__(self, points=None):
+        super(RectBlock, self).__init__()
+
+        if not points:
+            return
+
+        self.p1 = points[0][0],points[0][1]
+        self.p2 = points[1][0],points[1][1]
+        self.p3 = points[2][0],points[2][1]
+        self.p4 = points[3][0],points[3][1]
+
+        self.set_color((255,255,0,255))
+        self.set_stroke_width(5)
+
+    def render(self):
+        print "rendering block"
+        self.set_join(draw.MITER_JOIN)
+        self.move_to(self.p1)
+        self.line_to(self.p2)
+        self.line_to(self.p3)
+        self.line_to(self.p4)
+        self.line_to(self.p1)
 
 class GameCtrl(Layer):
     is_event_handler = True
@@ -36,16 +68,23 @@ class GameCtrl(Layer):
         bodies = self.model.world.GetBodyList()
         i = 0
         for b in bodies:
-            userdata = b.GetUserData()
-            if not userdata:
-                userdata = {}
-                b.SetUserData(userdata)
-            sprite = userdata.get("sprite")
+            props = b.GetUserData()
+            if not props:
+                continue
+            sprite = props.get_sprite()
             if not sprite:
-                sprite = Sprite(self.image)
-                self.add(sprite)
-                userdata["sprite"] = sprite
+                if props.isCharacter:
+                    sprite = Sprite(self.image)
+                elif props.isBlock:
+                    shape = b.GetShapeList()[0]
+                    vertices = shape.getVertices_b2Vec2()
+                    sprite = RectBlock(vertices)
+                    print sprite.p1, sprite.p2, sprite.p3, sprite.p4
+                else:
+                    continue
 
+            props.set_sprite(sprite)
+            self.add(sprite)
             sprite.position = (b.position.x * self.model.zoom), \
                 (b.position.y * self.model.zoom)
             degrees = (b.GetAngle() * 180) / math.pi
