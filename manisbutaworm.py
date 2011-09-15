@@ -13,6 +13,7 @@ from gamemodel import GameModel
 from gamectrl import GameCtrl
 from background import BackgroundLayer
 
+import sound
 
 class LogoLayer(Layer):
 
@@ -37,6 +38,8 @@ class LogoLayer(Layer):
         info.position = WIDTH / 2, HEIGHT / 5
         self.add(info)
 
+        sound.start_music()
+
     def draw(self):
         self.img.blit(WIDTH / 2, HEIGHT / 2)
 
@@ -44,6 +47,14 @@ class LogoLayer(Layer):
         if k in [key.SPACE, key.RETURN]:
             scene = new_game()
             director.replace(FadeTransition(scene, 2))
+            return True
+        # FIXME remove after tests
+        elif k in [key.Z]:
+            sound.inc_music()
+            return True
+        # FIXME remove after tests
+        elif k in [key.X]:
+            sound.dec_music()
             return True
         return False
 
